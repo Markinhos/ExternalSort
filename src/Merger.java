@@ -7,14 +7,21 @@ import java.util.stream.Collectors;
 
 
 public class Merger {
-	static int maxBufferSize = 100 * 1024;
 	
-	public static void kMerge(List<String> files) throws IOException {
+	/**
+	 * Makes a k way merge from the list of files given in the parameters and write it to the output path.
+	 * @param files List of files to be merged.
+	 * @param outputPath The path where the output file is written.
+	 * @throws IOException
+	 */
+	public static void kMerge(List<String> files, String outputPath) throws IOException {
+		
+		long maxBufferSize = Runtime.getRuntime().freeMemory() / (files.size() + 1);
 		
 		List<Chunk> chunks = files.stream().map((file) -> new Chunk(file)).collect(Collectors.toList());
 		
 				
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/output.txt"),"UTF-8"), maxBufferSize);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8"), (int) maxBufferSize);
 		
 		mergeAndWriteChunks(bw, chunks);
 		
@@ -25,14 +32,14 @@ public class Merger {
 	}
 	
 	private static void mergeAndWriteChunks(BufferedWriter bw, List<Chunk> chunks) throws IOException {
-		while(!areBuffersFinished(chunks)) {
+		while(!areAllBuffersFinished(chunks)) {
 			bw.write(getMinLineFromChunks(chunks));
 			bw.newLine();
 			chunks = chunks.stream().filter(c -> !c.isFinished()).collect(Collectors.toList());
 		}
 	}
 	
-	private static boolean areBuffersFinished(List<Chunk> chunks) {
+	private static boolean areAllBuffersFinished(List<Chunk> chunks) {
 		return chunks.stream().allMatch(chunk -> chunk.isFinished());
 	}
 	

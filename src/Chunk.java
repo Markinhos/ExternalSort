@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Chunk{
-	private int maxBufferSize = 8 * 1024;
+	private int maxBufferSize;
 	private boolean isFinished;
 	private boolean areMoreBuffers;
 	private BufferedReader br;
@@ -20,8 +20,10 @@ public class Chunk{
 		this.isFinished = false;
 		this.areMoreBuffers = true;
 		this.linesBuffer = new ArrayList<String>();
+		this.maxBufferSize = maxBufferSize;
+		
 		try {
-			this.br = new BufferedReader(new FileReader("/tmp/sorted_" + path + ".txt"), maxBufferSize);
+			this.br = new BufferedReader(new FileReader(path), maxBufferSize);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,10 +52,18 @@ public class Chunk{
 		}
 	}
 	
+	/**
+	 * Indicate if the chunk has no more lines.
+	 * @return true if no more lines available.
+	 */
 	public boolean isFinished() {
 		return isFinished;
 	}
 	
+	/**
+	 * Gets the first line from the list of lines.
+	 * @return Gives the first line if available. Null otherwise.
+	 */
 	public String getMinLine() {
 
 		if (isFinished) {
@@ -63,8 +73,13 @@ public class Chunk{
 		
 	}
 	
+	/**
+	 * Returns the first line and removes it from the list.
+	 * @return The first line.
+	 * @throws IOException
+	 */
 	public String pop() throws IOException {
-		String line = linesBuffer.remove(0);		
+		String line = getMinLine();		
 		
 		if (linesBuffer.isEmpty() && areMoreBuffers) {
 			try {
