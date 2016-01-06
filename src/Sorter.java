@@ -1,12 +1,13 @@
-import java.io.IOException;
 import java.util.List;
 
 
 public class Sorter{
 	
-	public static void sort(String inputPath, String outputPath) throws IOException {
+	public static void sort(String inputPath, String outputPath) {
+		long start = System.nanoTime();
 		List<String> listOfChunks = Splitter.splitFiles(inputPath);
 		Merger.kMerge(listOfChunks, outputPath);
+		System.out.println("Duration in " + (double)(System.nanoTime() - start) / 1000000000.0 + " seg");
 	}
 	
 	/**
@@ -50,6 +51,7 @@ public class Sorter{
 		}
 		return i;
 	}
+	
 	
 	private static <E extends Comparable<E>> void swap(List<E> list, int x, int y) {
 		E aux = list.get(y);
