@@ -3,11 +3,28 @@ import java.util.List;
 
 public class Sorter{
 	
-	public static void sort(String inputPath, String outputPath) {
+	private static String defaultEncoding = "UTF-8";
+	
+	/**
+	 * Sorts the lines of a file in increasing order.
+	 * @param inputPath Input file to sort.
+	 * @param outputPath Output path.
+	 * @param encoding Encoding to read and write.
+	 */
+	public static void externalSort(String inputPath, String outputPath, String encoding) {
 		long start = System.nanoTime();
-		List<String> listOfChunks = Splitter.splitFiles(inputPath);
-		Merger.kMerge(listOfChunks, outputPath);
+		List<String> listOfChunks = Splitter.splitFiles(inputPath, encoding);
+		Merger.kMerge(listOfChunks, outputPath, encoding);
 		System.out.println("Duration in " + (double)(System.nanoTime() - start) / 1000000000.0 + " seg");
+	}
+	
+	/**
+	 * Sorts the lines of a file in increasing order. Uses UTF-8 encoding.
+	 * @param inputPath Input file to sort.
+	 * @param outputPath Output path.
+	 */
+	public static void externalSort(String inputPath, String outputPath) {
+		externalSort(inputPath, outputPath, defaultEncoding);
 	}
 	
 	/**
