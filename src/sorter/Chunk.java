@@ -1,3 +1,4 @@
+package sorter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,11 +64,7 @@ public class Chunk{
 			this.linesBuffer.addAll(getLinesFromStringBuffer(sb));
 			positionInFile += read;
 			
-			if (linesBuffer.isEmpty()){
-				this.isFinished = true;
-			} else {
-				this.isFinished = false;
-			}
+			this.isFinished = linesBuffer.isEmpty();
 		}
 		
 	}
@@ -115,7 +112,7 @@ public class Chunk{
 	public Line pop() {
 		Line line = linesBuffer.poll();
 		
-		if (!line.isLinePendingToWrite() && linesBuffer.isEmpty() && areMoreBuffers) {
+		if (areMoreBuffers && !line.isLinePendingToWrite() && linesBuffer.isEmpty()) {
 			try {
 				this.fillBuffer();
 			} catch (IOException e) {

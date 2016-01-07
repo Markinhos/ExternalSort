@@ -1,3 +1,4 @@
+package sorter;
 
 public class Main {
 

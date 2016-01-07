@@ -1,3 +1,4 @@
+package sorter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -63,11 +64,12 @@ public class Splitter {
 		int numChunks = 1;
 		
 		int bytesCount = 0;
-		int read, readBufferSize = 8 * 1024;
+		int readBufferSize = 8 * 1024;
 		StringBuffer sb = new StringBuffer();
 		
 		char[] cbuf = new char[readBufferSize];
 		try {
+			int read;
 			while((read = br.read(cbuf)) > 0) {			
 				if (bytesCount + read > bufferSize) {
 					String chunkPath = tempFolder + "chunk" + numChunks + ".txt";
