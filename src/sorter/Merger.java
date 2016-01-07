@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Merger {
 	
 	private final static String defaultEncoding = "UTF-8";
-	private final static int bufferSize = 64 * 1000;
+	private final static int bufferSize = 64 * 1024;
 	
 	/**
 	 * Makes a k way merge from the list of files given in the parameters and write it to the output path.
