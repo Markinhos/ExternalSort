@@ -69,6 +69,58 @@ public class SorterTests {
 		new File(outputFile).delete();
 	}
 	
+	@Test
+	public void testExternalSortUnicode() throws IOException {
+		String tempFolder = System.getProperty("java.io.tmpdir");
+		
+		List<String> lines = Arrays.asList("fîrst line", "a, this gøes first", "second line ñ");
+		String testFile = tempFolder + "testUnicode.txt";
+		generateFile(testFile, lines);
+		
+		String outputFile = tempFolder + "testOutputUnicode.txt";
+		Sorter.externalSort(testFile, outputFile, "UTF-8");
+		List<String> expectedOutput = Arrays.asList("a, this gøes first", "fîrst line", "second line ñ");
+		
+		int count = 0;
+		
+		BufferedReader br = new BufferedReader(new FileReader(outputFile));
+		String line;
+		while((line = br.readLine()) != null) {
+			assertEquals(line, expectedOutput.get(count));
+			count++;
+		}
+		br.close();
+		
+		new File(testFile).delete();
+		new File(outputFile).delete();
+	}
+	
+	@Test
+	public void testExternalSortUnicodeFail() throws IOException {
+		String tempFolder = System.getProperty("java.io.tmpdir");
+		
+		List<String> lines = Arrays.asList("fîrst line", "a, this gøes first", "second line ñ");
+		String testFile = tempFolder + "testUnicodeFail.txt";
+		generateFile(testFile, lines);
+		
+		String outputFile = tempFolder + "testOutputFails.txt";
+		Sorter.externalSort(testFile, outputFile, "UTF-16");
+		List<String> expectedOutput = Arrays.asList("a, this gøes first", "fîrst line", "second line ñ");
+		
+		int count = 0;
+		
+		BufferedReader br = new BufferedReader(new FileReader(outputFile));
+		String line;
+		while((line = br.readLine()) != null) {
+			assertNotEquals(line, expectedOutput.get(count));
+			count++;
+		}
+		br.close();
+		
+		new File(testFile).delete();
+		new File(outputFile).delete();
+	}
+	
 	private Integer[] genData (int len) {
         Random r = new Random();
         Integer[] newData = new Integer[len];
