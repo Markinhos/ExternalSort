@@ -58,7 +58,6 @@ public class Chunk{
 		if (read < 0) {
 			areMoreBuffers = false;
 			this.br.close();
-			deleteChunk();
 		} else {
 			sb.append(cbuf, 0, read);
 			this.linesBuffer.addAll(getLinesFromStringBuffer(sb));
@@ -125,11 +124,16 @@ public class Chunk{
 			this.pendingToWrite = true;
 		}
 		
-		if(linesBuffer.isEmpty() && !areMoreBuffers) {
-			this.isFinished = true;
+		if(linesBuffer.isEmpty()) {
+			markAsFinished();
 		}
 			
 		return line;
+	}
+	
+	private void markAsFinished() {
+		this.isFinished = true;
+		deleteChunk();
 	}
 	
 	public String getNextStringChunk() throws IOException {
@@ -143,7 +147,8 @@ public class Chunk{
 		
 		read = this.br.read(cbuf);
 		if (read < 0) {
-			this.isFinished = true;
+			areMoreBuffers = false;
+			markAsFinished();
 			return null;
 		} 
 		

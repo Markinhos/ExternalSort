@@ -1,4 +1,5 @@
 package sorter;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ public class Sorter{
 	public static void externalSort(String inputPath, String outputPath, String encoding) {
 		long start = System.nanoTime();
 		List<String> listOfChunks = Splitter.splitFiles(inputPath, encoding);
+//		List<String> listOfChunks = Arrays.asList("/var/folders/jz/hb_xf15n2n72r0mp35xwkslc0000gn/T/chunk3.txt", "/var/folders/jz/hb_xf15n2n72r0mp35xwkslc0000gn/T/chunk1.txt", "/var/folders/jz/hb_xf15n2n72r0mp35xwkslc0000gn/T/chunk2.txt");
 		Merger.kMerge(listOfChunks, outputPath, encoding);
 		System.out.println("Duration in " + (double)(System.nanoTime() - start) / 1000000000.0 + " seg");
 	}
